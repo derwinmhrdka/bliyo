@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { appUrl } from '@/lib/public-origin';
 
 const PUBLIC_PREFIXES = ['/login', '/register', '/auth', '/r', '/api'];
 
@@ -11,9 +12,7 @@ export function middleware(request: NextRequest) {
     PUBLIC_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
 
   if (!token && !isPublic) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(appUrl(request.headers, '/login', request.url));
   }
 
   return NextResponse.next();

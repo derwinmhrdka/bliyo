@@ -77,6 +77,14 @@ services:
     ports:
       # Host nginx proxies the site here. API is on 127.0.0.1:13004.
       - "127.0.0.1:${APP_HOST_PORT:-13003}:3000"
+    networks:
+      - default
+      - teknodika_shared
+
+networks:
+  teknodika_shared:
+    external: true
+    name: teknodika_shared
 
 volumes:
   pgdata:
