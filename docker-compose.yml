@@ -1,0 +1,82 @@
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bliyo
+      POSTGRES_PASSWORD: bliyo
+      POSTGRES_DB: bliyo
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bliyo -d bliyo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      target: migrate
+    restart: "no"
+    environment:
+      DATABASE_URL: postgresql://bliyo:bliyo@db:5432/bliyo?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    build:
+      context: .
+      target: api
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql://bliyo:bliyo@db:5432/bliyo?schema=public
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      PORT: "13004"
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
+      JWT_EXPIRES_IN: 7d
+      WEB_ORIGIN: https://${DOMAIN:-bliyo.teknodika.com}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL:-https://bliyo.teknodika.com/api/auth/google/callback}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@bliyo.local}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-change-me-please}
+      SEED_ADMIN_NAME: ${SEED_ADMIN_NAME:-Super Admin}
+      NODE_ENV: production
+    ports:
+      - "127.0.0.1:${API_HOST_PORT:-13004}:13004"
+
+  web:
+    build:
+      context: .
+      target: web
+      args:
+        NEXT_PUBLIC_API_URL: https://${DOMAIN:-bliyo.teknodika.com}
+        API_INTERNAL_URL: http://api:13004
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      API_INTERNAL_URL: http://api:13004
+      WEB_PUBLIC_URL: https://${DOMAIN:-bliyo.teknodika.com}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-me}
+      COOKIE_SECURE: "true"
+      PORT: "3000"
+      NODE_ENV: production
+    ports:
+      # Host nginx proxies the site here. API is on 127.0.0.1:13004.
+      - "127.0.0.1:${APP_HOST_PORT:-13003}:3000"
+
+volumes:
+  pgdata:

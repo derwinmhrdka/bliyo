@@ -1,0 +1,42 @@
+# Host nginx — HTTPS for the Bliyo domain.
+# Docker web listens on 127.0.0.1:13003. API listens on 127.0.0.1:13004.
+# /api is proxied by the Next.js app to the API container, so nginx has one upstream.
+#
+# Setup on VPS (once):
+#   1. DNS: your domain → VPS IP
+#   2. sudo cp deploy/nginx-bliyo.conf.example /etc/nginx/sites-available/bliyo
+#   3. Edit server_name, and proxy_pass if APP_HOST_PORT is not 13003
+#   4. sudo ln -s /etc/nginx/sites-available/bliyo /etc/nginx/sites-enabled/
+#   5. sudo nginx -t && sudo systemctl reload nginx
+#   6. sudo certbot --nginx -d bliyo.teknodika.com
+#
+# Deploy app: bash deploy/docker-deploy.sh
+
+server {
+    listen 80;
+    server_name bliyo.teknodika.com;
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl http2;
+    server_name bliyo.teknodika.com;
+
+    # certbot adds ssl_certificate / ssl_certificate_key here
+
+    client_max_body_size 1m;
+
+    location / {
+        proxy_pass http://127.0.0.1:13003;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}

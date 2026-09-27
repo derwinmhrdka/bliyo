@@ -1,0 +1,31 @@
+.trail {
+  @apply mb-3.5 text-xs font-semibold text-mute;
+}
+
+.title {
+  @apply mb-[18px] text-xl font-extrabold;
+}
+
+.muted {
+  @apply text-sm text-mute;
+}
+
+.stats {
+  @apply mb-5 flex flex-wrap gap-3.5;
+}
+
+.charts {
+  @apply flex flex-wrap gap-[18px];
+}
+
+.stat {
+  @apply min-w-[130px] flex-1 rounded-xl border border-line p-3.5;
+}
+
+.statLabel {
+  @apply mb-1.5 text-xs font-semibold text-mute;
+}
+
+.statValue {
+  @apply text-xl font-extrabold;
+}

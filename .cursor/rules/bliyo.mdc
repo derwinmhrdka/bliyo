@@ -1,0 +1,56 @@
+---
+description: Aturan visual, stack, dan batasan proyek Bliyo
+alwaysApply: true
+---
+
+# Bliyo — Project Rules
+
+- Tahap piloting (50 sampai 100 user) di VPS 2GB RAM / 2 core. Jangan over-engineer: tidak microservices, tidak Kubernetes, tidak message broker selain Redis/BullMQ.
+- Struktur kode modular per domain, tetap satu monolith.
+- Semua konfigurasi lewat environment variable. Jangan hardcode connection string, secret, atau URL.
+
+## Stack
+
+- Backend: NestJS + TypeScript + Prisma + PostgreSQL + Redis + BullMQ
+- Frontend: Next.js App Router + TypeScript + Tailwind CSS
+- Auth: JWT, Passport local dan Google OAuth2
+- Font: Manrope (400/500/600/700/800) dari Google Fonts
+
+## Palet
+
+- Hijau gelap: `#0e3d23`
+- Hijau sedang: `#1a6b3f`
+- Hijau terang: `#1f8a4c`
+- Hijau sangat muda: `#e7f3ec`
+- Putih: `#ffffff`
+- Teks utama: `#16241c`
+- Teks sekunder: `#5c6b62`
+- Border: `#dfe8e2`
+
+## Larangan
+
+1. Jangan gunakan tanda pisah ganda (dua tanda hubung berurutan) di copy yang tampil ke user.
+2. Jangan gunakan gradient warna-warni. Warna flat sesuai palet. Wave boleh dua hijau solid yang di-layer.
+3. Jangan gunakan chip atau badge membulat berwarna-warni yang tidak perlu. Badge status pakai outline sederhana.
+4. Jangan gunakan icon set generic, icon 3D, icon gradient, atau emoji sebagai icon UI. SVG garis sederhana dari palet, atau teks saja.
+5. Jangan gunakan shadow berlebihan atau glassmorphism. Elevasi cukup border `1px solid #dfe8e2` dan shadow halus hanya jika perlu.
+6. Border-radius konsisten, sekitar 8 sampai 14px untuk card dan input.
+7. Semua komponen rapi di desktop dan mobile web.
+
+## Komponen
+
+- Tombol utama: background `#0e3d23`, teks putih, radius sekitar 9px, tanpa gradient.
+- Tombol Google: hanya icon Google resmi, tanpa teks, border tipis, sudut membulat.
+- Input: border `#dfe8e2`, fokus menjadi hijau terang, tanpa glow berlebihan.
+- Halaman yang belum dispesifikasi wajib berlabel "Under Development".
+- Donut chart pakai SVG, warna dari palet hijau.
+
+## Kode
+
+- Folder kebab-case, komponen React PascalCase, fungsi dan variabel camelCase.
+- Module NestJS: controller, service, module, dto terpisah.
+- Query Prisma tidak boleh N+1.
+- Endpoint yang butuh autentikasi wajib pakai guard.
+- Komentar seperlunya.
+
+Detail lengkap ada di `RULES.md`.

@@ -1,0 +1,24 @@
+{
+  "name": "bliyo",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web \"npm run start:dev -w @bliyo/api\" \"npm run dev -w @bliyo/web\"",
+    "dev:api": "npm run start:dev -w @bliyo/api",
+    "dev:web": "npm run dev -w @bliyo/web",
+    "build": "npm run build -w @bliyo/api && npm run build -w @bliyo/web",
+    "prisma:generate": "npm run prisma:generate -w @bliyo/api",
+    "prisma:deploy": "npm run prisma:deploy -w @bliyo/api",
+    "prisma:seed": "npm run prisma:seed -w @bliyo/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

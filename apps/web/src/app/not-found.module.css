@@ -1,0 +1,11 @@
+.page {
+  @apply flex min-h-dvh flex-col items-center justify-center bg-white px-6 text-center;
+}
+
+.title {
+  @apply mb-2 text-xl font-extrabold;
+}
+
+.link {
+  @apply text-sm font-bold text-green-accent;
+}

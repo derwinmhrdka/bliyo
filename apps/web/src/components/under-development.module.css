@@ -1,0 +1,15 @@
+.wrap {
+  @apply flex min-h-[420px] flex-col items-center justify-center px-6 py-10 text-center;
+}
+
+.tag {
+  @apply mb-3.5 rounded-lg border-[1.5px] border-green-accent px-3.5 py-1 text-xs font-bold uppercase tracking-[0.06em] text-green-accent;
+}
+
+.title {
+  @apply mb-1.5 text-xl font-extrabold;
+}
+
+.text {
+  @apply max-w-[320px] text-sm text-mute;
+}

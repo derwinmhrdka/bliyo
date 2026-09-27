@@ -1,0 +1,175 @@
+.toolbar {
+  @apply mb-4 flex flex-col gap-2 sm:flex-row;
+}
+
+.search {
+  @apply min-w-0 flex-1 rounded-[9px] border border-line bg-white px-3 py-2.5 text-sm font-medium text-ink outline-none;
+}
+
+.search:focus,
+.dialog input:focus,
+.dialog select:focus {
+  @apply border-green-accent;
+}
+
+.add {
+  @apply rounded-[9px] bg-green-dark px-4 py-2.5 text-sm font-bold text-white disabled:opacity-60;
+}
+
+.list {
+  @apply flex flex-col gap-2;
+}
+
+.row {
+  @apply flex items-center justify-between gap-3 rounded-[12px] border border-line bg-white px-3 py-2.5;
+}
+
+.rowOff {
+  @apply bg-[#f7f4ee];
+}
+
+.rowOff .name,
+.rowOff .meta {
+  @apply text-mute;
+}
+
+.person {
+  @apply flex min-w-0 items-center gap-3;
+}
+
+.avatar {
+  @apply flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-line bg-[#e7f3ec] text-sm font-extrabold text-green-dark;
+}
+
+.avatar img {
+  @apply h-full w-full object-cover;
+}
+
+.nameLine {
+  @apply flex flex-wrap items-center gap-2;
+}
+
+.name {
+  @apply text-sm font-bold text-ink;
+}
+
+.meta {
+  @apply block truncate text-xs text-mute;
+}
+
+.tag {
+  @apply rounded-[6px] border border-green-mid px-1.5 py-0.5 text-[0.68rem] font-semibold leading-none text-green-dark;
+}
+
+.actions {
+  @apply flex shrink-0 items-center gap-1;
+}
+
+.iconButton {
+  @apply inline-flex h-8 w-8 items-center justify-center rounded-[8px] border border-line text-green-dark;
+}
+
+.error {
+  @apply mb-3 text-xs font-semibold text-danger;
+}
+
+.muted {
+  @apply text-sm text-mute;
+}
+
+.page {
+  @apply flex flex-col;
+}
+
+.toolbar {
+  order: 1;
+}
+
+.panel {
+  order: 2;
+  @apply mb-4 rounded-[12px] border border-line bg-[#fbf8f2] px-4 py-4 sm:px-5;
+}
+
+.panel h2 {
+  @apply mb-4 text-base font-extrabold text-ink;
+}
+
+.list,
+.error,
+.muted {
+  order: 3;
+}
+
+.overlay {
+  @apply fixed inset-0 z-40 flex items-center justify-center bg-[#0e3d23]/40 px-4;
+}
+
+.dialog {
+  @apply max-h-[90dvh] w-full max-w-md overflow-auto rounded-[12px] border border-line bg-[#fbf8f2] px-5 py-5;
+}
+
+.dialog h2,
+.panel h2 {
+  @apply mb-4 text-base font-extrabold text-ink;
+}
+
+.panel .activeRow,
+.dialog .activeRow {
+  @apply flex items-center gap-2 text-sm font-semibold text-ink;
+}
+
+.panel .activeRow input,
+.dialog .activeRow input {
+  @apply h-4 w-4;
+}
+
+.dialogActions {
+  @apply mt-2 flex justify-end gap-2;
+}
+
+.cancel {
+  @apply rounded-[9px] border border-line bg-white px-4 py-2.5 text-sm text-ink;
+}
+
+@media (max-width: 767px) {
+  .list {
+    @apply gap-1.5;
+  }
+
+  .row {
+    @apply gap-2 rounded-[10px] px-2 py-1.5;
+  }
+
+  .person {
+    @apply gap-2;
+  }
+
+  .avatar {
+    @apply h-7 w-7 text-[0.68rem];
+  }
+
+  .nameLine {
+    @apply gap-1;
+  }
+
+  .name {
+    @apply text-[0.75rem];
+  }
+
+  .meta {
+    @apply text-[0.68rem];
+  }
+
+  .tag {
+    @apply px-1 py-0 text-[0.6rem];
+  }
+
+  .iconButton {
+    @apply h-7 w-7;
+  }
+
+  .iconButton svg {
+    width: 14px;
+    height: 14px;
+  }
+}

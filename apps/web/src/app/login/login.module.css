@@ -1,0 +1,72 @@
+@keyframes wave {
+  0%,
+  100% {
+    transform: translate3d(0, 4%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-6%, -3%, 0) scale(1.03);
+  }
+}
+
+.wave {
+  position: absolute;
+  width: 140%;
+  height: 140%;
+  left: -20%;
+  bottom: -18%;
+  animation: wave 14s ease-in-out infinite;
+}
+
+.waveFront {
+  animation-duration: 18s;
+  animation-direction: reverse;
+}
+
+.card {
+  background: #e7f3ec;
+}
+
+@keyframes google {
+  0%,
+  100% {
+    transform: rotate(-6deg) scale(1);
+  }
+  50% {
+    transform: rotate(6deg) scale(1.08);
+  }
+}
+
+.google svg {
+  transform-origin: center;
+  animation: google 5s ease-in-out infinite;
+}
+
+.google:hover svg {
+  animation-play-state: paused;
+  transform: scale(1.12) rotate(-4deg);
+}
+
+@keyframes submit {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.submit {
+  animation: submit 3.6s ease-in-out infinite;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.submit:hover:not(:disabled) {
+  animation: none;
+  background-color: #1a6b3f;
+  transform: translateY(-4px) scale(1.02);
+}
+
+.submit:active:not(:disabled) {
+  transform: translateY(2px) scale(0.98);
+}

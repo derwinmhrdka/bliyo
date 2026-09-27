@@ -1,0 +1,15 @@
+.card {
+  @apply flex min-w-[220px] flex-1 flex-col items-center rounded-xl border border-line p-[18px];
+}
+
+.title {
+  @apply mb-3.5 self-start text-sm font-bold;
+}
+
+.legend {
+  @apply mt-3.5 flex flex-wrap justify-center gap-x-3.5 gap-y-2 text-xs text-mute;
+}
+
+.dot {
+  @apply mr-1.5 inline-block h-2 w-2 rounded-full;
+}

@@ -1,0 +1,10 @@
+**/node_modules
+**/.next
+**/dist
+.git
+mockup
+*.md
+!apps/api/prisma/**
+.env
+apps/api/.env
+apps/web/.env.local

@@ -1,0 +1,14 @@
+node_modules
+mockup/
+dist
+.next
+.turbo
+*.tsbuildinfo
+.env
+.env.local
+apps/api/.env
+apps/web/.env.local
+npm-debug.log*
+coverage
+.DS_Store
+Thumbs.db
