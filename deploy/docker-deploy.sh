@@ -8,9 +8,28 @@ if [ ! -f .env ]; then
   exit 1
 fi
 
-# shellcheck disable=SC1091
+# Jangan pakai source: nilai berisi spasi (mis. nama "Super Admin") akan dianggap perintah.
 set -a
-source .env
+while IFS= read -r line || [ -n "$line" ]; do
+  line="${line%$'\r'}"
+  case "$line" in
+    ''|\#*) continue ;;
+  esac
+  key="${line%%=*}"
+  value="${line#*=}"
+  case "$key" in
+    ''|*[!A-Za-z0-9_]*) continue ;;
+  esac
+  if [ "${value#\"}" != "$value" ] && [ "${value%\"}" != "$value" ]; then
+    value="${value#\"}"
+    value="${value%\"}"
+  elif [ "${value#\'}" != "$value" ] && [ "${value%\'}" != "$value" ]; then
+    value="${value#\'}"
+    value="${value%\'}"
+  fi
+  printf -v "$key" '%s' "$value"
+  export "$key"
+done < .env
 set +a
 
 APP_HOST_PORT="${APP_HOST_PORT:-13003}"
