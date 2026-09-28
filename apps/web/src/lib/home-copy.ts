@@ -4,7 +4,6 @@ export function homeCopy(locale: Locale) {
   if (locale === 'en') {
     return {
       masuk: 'Sign in',
-      register: 'Register',
       welcome: 'Welcome',
       dasbor: 'Dashboard',
       keluar: 'Log out',
@@ -32,7 +31,6 @@ export function homeCopy(locale: Locale) {
 
   return {
     masuk: 'Masuk',
-    register: 'Register',
     welcome: 'Selamat Datang',
     dasbor: 'Dashboard',
     keluar: 'Keluar',

@@ -3,17 +3,6 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-function SadIcon() {
-  return (
-    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="8.25" stroke="#0e3d23" strokeWidth="1.5" />
-      <circle cx="9" cy="10" r="0.8" fill="#0e3d23" />
-      <circle cx="15" cy="10" r="0.8" fill="#0e3d23" />
-      <path d="M9 16.2c.9-1.3 1.9-1.9 3-1.9s2.1.6 3 1.9" stroke="#0e3d23" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 function LogoutIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -61,6 +50,7 @@ export function LogoutButton({
 
   const english = host !== null && document.cookie.includes('bliyo_lang=en');
   const title = english ? 'Sure you want to leave?' : 'Yakin nih mau keluar?';
+  const note = english ? 'You will be taken to the login page' : 'Kamu akan diarahkan ke halaman login';
   const cancel = english ? 'Cancel' : 'Batal';
   const confirm = english ? 'Log out' : 'Keluar';
 
@@ -80,10 +70,11 @@ export function LogoutButton({
               onMouseDown={(event) => event.stopPropagation()}
             >
               <div className="w-full max-w-[320px] rounded-[12px] border border-[#dfe8e2] bg-[#fbf8f2] px-5 py-5 text-center">
-                <div className="mb-3 flex justify-center">
-                  <SadIcon />
-                </div>
+                <p className="mb-2 text-4xl leading-none" aria-hidden="true">
+                  😢
+                </p>
                 <p className="text-base font-bold text-[#16241c]">{title}</p>
+                <p className="mt-1 text-xs text-[#5c6b62]">{note}</p>
                 <div className="mt-4 flex justify-end gap-2">
                   <button
                     type="button"

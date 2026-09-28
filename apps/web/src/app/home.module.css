@@ -105,7 +105,11 @@
 }
 
 .avatar {
-  @apply flex h-8 w-8 items-center justify-center rounded-full border-[1.5px] border-line bg-green-soft text-[0.7rem] font-light text-green-dark;
+  @apply flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border-[1.5px] border-line bg-green-soft text-[0.7rem] font-light text-green-dark;
+}
+
+.avatar img {
+  @apply h-full w-full object-cover;
 }
 
 .profile {

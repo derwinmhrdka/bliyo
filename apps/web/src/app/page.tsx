@@ -1,4 +1,5 @@
 import { LinkForm } from '@/components/link-form';
+import { apiFetch } from '@/lib/api';
 import { SiteHeader } from '@/components/site-header';
 import { homeCopy } from '@/lib/home-copy';
 import { getLocale } from '@/lib/locale';
@@ -81,16 +82,24 @@ export default async function HomePage() {
   const locale = await getLocale();
   const copy = homeCopy(locale);
   const dashboardHref = !session ? undefined : session.role === 'member' ? '/member' : '/admin';
+  let avatar = '';
+  if (session) {
+    const profileResponse = await apiFetch('/api/users/me');
+    if (profileResponse.ok) {
+      const profile = (await profileResponse.json()) as { avatarData?: string | null };
+      avatar = profile.avatarData || '';
+    }
+  }
 
   return (
     <div className={styles.page}>
       <img src="/home/bg-reward.jpg" alt="" className={styles.backdrop} />
       <SiteHeader
         name={session?.name}
+        avatar={avatar}
         dashboardHref={dashboardHref}
         locale={locale}
         masuk={copy.masuk}
-        register={copy.register}
         welcome={copy.welcome}
         dasbor={copy.dasbor}
         keluar={copy.keluar}

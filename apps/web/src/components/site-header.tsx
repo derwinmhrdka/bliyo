@@ -2,24 +2,25 @@ import Link from 'next/link';
 import styles from '@/app/home.module.css';
 import type { Locale } from '@/lib/locale-shared';
 import { LanguageSwitch } from './language-switch';
+import { NotificationMenu } from './notification-menu';
 import { ProfileMenu } from './profile-menu';
 
 export function SiteHeader({
   name,
+  avatar,
   dashboardHref,
   locale,
   masuk,
-  register,
   welcome,
   dasbor,
   keluar,
   langLabel,
 }: {
   name?: string;
+  avatar?: string;
   dashboardHref?: string;
   locale: Locale;
   masuk: string;
-  register: string;
   welcome: string;
   dasbor: string;
   keluar: string;
@@ -55,9 +56,11 @@ export function SiteHeader({
           <p className={styles.welcome}>
             {welcome} {firstName}{!!firstName && '!'}
           </p>
+          <NotificationMenu />
           <ProfileMenu
           name={name}
           initial={initial}
+          avatar={avatar}
           dashboardHref={dashboardHref}
           dasbor={dasbor}
           keluar={keluar}
@@ -67,9 +70,6 @@ export function SiteHeader({
         </div>
       ) : (
         <div className={styles.actions}>
-          <Link href="/register" className={styles.loginLink}>
-            {register}
-          </Link>
           <Link href="/login" className={styles.loginLink}>
             {masuk}
           </Link>

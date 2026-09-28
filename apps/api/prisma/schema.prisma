@@ -25,6 +25,13 @@ enum CommissionStatus {
   paid
 }
 
+enum AffiliateLinkStatus {
+  processing
+  note
+  done
+  rejected
+}
+
 model User {
   id           String   @id @default(uuid()) @db.Uuid
   email        String   @unique
@@ -46,6 +53,7 @@ model User {
   affiliateLinks AffiliateLink[]
   transactions   Transaction[]
   commissions    Commission[]
+  notifications  Notification[]
 
   @@map("users")
 }
@@ -73,6 +81,7 @@ model AffiliateLink {
   merchantId  String?  @map("merchant_id") @db.Uuid
   originalUrl String   @map("original_url")
   shortCode   String   @unique @map("short_code")
+  status      AffiliateLinkStatus @default(processing)
   isActive    Boolean  @default(true) @map("is_active")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
@@ -80,10 +89,23 @@ model AffiliateLink {
   user         User          @relation(fields: [userId], references: [id])
   merchant     Merchant?     @relation(fields: [merchantId], references: [id])
   transactions Transaction[]
+  events       LinkEvent[]
 
   @@index([userId])
   @@index([merchantId])
   @@map("affiliate_links")
+}
+
+model LinkEvent {
+  id              String   @id @default(uuid()) @db.Uuid
+  affiliateLinkId String   @map("affiliate_link_id") @db.Uuid
+  title           String
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  affiliateLink AffiliateLink @relation(fields: [affiliateLinkId], references: [id], onDelete: Cascade)
+
+  @@index([affiliateLinkId])
+  @@map("link_events")
 }
 
 model Transaction {
@@ -123,4 +145,18 @@ model Commission {
   @@index([userId])
   @@index([transactionId])
   @@map("commissions")
+}
+
+model Notification {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @map("user_id") @db.Uuid
+  title     String
+  body      String
+  readAt    DateTime? @map("read_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("notifications")
 }

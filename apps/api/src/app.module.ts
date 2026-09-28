@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { AffiliateLinkModule } from './affiliate-link/affiliate-link.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { CommissionModule } from './commission/commission.module';
+import { NotificationModule } from './notification/notification.module';
 
 const redisEnabled = process.env.REDIS_ENABLED !== 'false';
 
@@ -39,6 +40,7 @@ const redisEnabled = process.env.REDIS_ENABLED !== 'false';
     AffiliateLinkModule,
     TransactionModule,
     CommissionModule,
+    NotificationModule,
   ],
   controllers: [AppController],
 })

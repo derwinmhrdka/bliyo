@@ -1,0 +1,33 @@
+.head {
+  @apply mb-4 flex items-start justify-between gap-3;
+}
+
+.trail {
+  @apply mb-3.5 text-xs font-semibold text-mute;
+}
+
+.title {
+  @apply text-xl font-extrabold text-ink;
+}
+
+.edit {
+  @apply inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-[9px] border border-line text-green-dark;
+}
+
+.card {
+  @apply max-w-lg rounded-[14px] border border-line bg-white px-4 py-4 sm:px-5;
+}
+
+.locked input,
+.locked textarea,
+.locked select {
+  @apply bg-[#f7f4ee];
+}
+
+.actions {
+  @apply mt-1 flex justify-end gap-2;
+}
+
+.cancel {
+  @apply rounded-[9px] border border-line bg-white px-4 py-2.5 text-sm font-semibold text-ink;
+}

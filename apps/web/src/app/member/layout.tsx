@@ -4,6 +4,8 @@ import { getSession } from '@/lib/session';
 
 const items = [
   { href: '/member', label: 'Dashboard', exact: true },
+  { href: '/member/my-link', label: 'My Link' },
+  { href: '/member/profile', label: 'Profile' },
   { href: '/member/settings', label: 'Settings' },
   { href: '/member/transaction', label: 'Transaction' },
 ];

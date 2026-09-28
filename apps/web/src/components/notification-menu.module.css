@@ -1,0 +1,47 @@
+.wrap {
+  @apply relative z-10;
+}
+
+.bell {
+  @apply relative inline-flex h-8 w-8 items-center justify-center text-white;
+}
+
+.dot {
+  @apply absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-white;
+}
+
+.menu {
+  @apply absolute right-0 top-[calc(100%+8px)] z-30 w-[280px] rounded-[10px] border border-line bg-[#fbf8f2] p-1 text-left;
+}
+
+.mark {
+  @apply mb-1 w-full rounded-[8px] px-2 py-1.5 text-left text-xs font-semibold text-green-dark;
+}
+
+.list {
+  @apply flex max-h-80 flex-col gap-0.5 overflow-auto;
+}
+
+.item {
+  @apply rounded-[8px] px-2 py-1.5;
+}
+
+.itemUnread .title {
+  @apply font-bold text-ink;
+}
+
+.title {
+  @apply text-xs font-semibold text-mute;
+}
+
+.body {
+  @apply mt-0.5 text-xs font-medium leading-snug text-ink;
+}
+
+.time {
+  @apply mt-0.5 text-[0.68rem] text-mute;
+}
+
+.empty {
+  @apply px-2 py-2 text-xs text-mute;
+}

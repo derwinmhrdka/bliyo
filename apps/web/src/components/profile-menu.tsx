@@ -31,6 +31,7 @@ function EnFlag() {
 export function ProfileMenu({
   name,
   initial,
+  avatar,
   dashboardHref,
   dasbor,
   keluar,
@@ -39,6 +40,7 @@ export function ProfileMenu({
 }: {
   name: string;
   initial: string;
+  avatar?: string;
   dashboardHref: string;
   dasbor: string;
   keluar: string;
@@ -76,7 +78,7 @@ export function ProfileMenu({
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
       >
-        {initial}
+        {avatar ? <img src={avatar} alt="" /> : initial}
       </button>
       {open ? (
         <div className={styles.profileMenu}>

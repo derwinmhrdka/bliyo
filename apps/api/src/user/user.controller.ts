@@ -14,7 +14,12 @@ export class UserController {
 
   @Get('me')
   me(@CurrentUser() user: AuthUser) {
-    return user;
+    return this.users.profile(user.id);
+  }
+
+  @Patch('me')
+  updateMe(@CurrentUser() user: AuthUser, @Body() body: UpdateUserDto) {
+    return this.users.updateSelf(user, body);
   }
 
   @Get()

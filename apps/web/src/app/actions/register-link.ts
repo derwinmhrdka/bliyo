@@ -48,6 +48,9 @@ export async function registerLink(
       const message = Array.isArray(data.message) ? data.message[0] : data.message;
       return { error: message || failed, shortUrl: '' };
     }
+    if (session.role === 'member') {
+      redirect('/member/my-link');
+    }
     return { error: '', shortUrl: `${web}/r/${data.shortCode}` };
   } catch {
     return { error: unavailable, shortUrl: '' };

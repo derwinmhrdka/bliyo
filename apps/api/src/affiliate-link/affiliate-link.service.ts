@@ -1,13 +1,17 @@
 import { randomBytes } from 'crypto';
 import { lookup } from 'dns/promises';
 import { isIP } from 'net';
-import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { AffiliateLinkStatus, Prisma } from '@prisma/client';
+import { NotificationService } from '../notification/notification.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class AffiliateLinkService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notifications: NotificationService,
+  ) {}
 
   async create(userId: string, originalUrl: string) {
     const host = new URL(originalUrl).hostname.toLowerCase().replace(/^www\./, '');
@@ -29,14 +33,21 @@ export class AffiliateLinkService {
             merchantId: merchant?.id,
             originalUrl,
             shortCode: randomBytes(6).toString('base64url'),
+            events: { create: { title: 'Link didaftarkan' } },
           },
           include: { merchant: { select: { name: true } } },
         });
+        const merchantName = link.merchant?.name ?? null;
+        await this.notifications.add(
+          userId,
+          'Link terdaftar',
+          merchantName ? `Link di ${merchantName} sudah didaftarkan.` : 'Link produkmu sudah didaftarkan.',
+        );
         return {
           id: link.id,
           shortCode: link.shortCode,
           originalUrl: link.originalUrl,
-          merchantName: link.merchant?.name ?? null,
+          merchantName,
         };
       } catch (error) {
         const duplicate =
@@ -59,11 +70,40 @@ export class AffiliateLinkService {
         id: true,
         originalUrl: true,
         shortCode: true,
+        status: true,
         isActive: true,
         createdAt: true,
         merchant: { select: { id: true, name: true } },
+        events: {
+          orderBy: { createdAt: 'asc' },
+          select: { id: true, title: true, createdAt: true },
+        },
       },
     });
+  }
+
+  async withdraw(userId: string, id: string) {
+    const link = await this.prisma.affiliateLink.findFirst({
+      where: { id, userId },
+      select: {
+        id: true,
+        status: true,
+        events: { select: { title: true } },
+      },
+    });
+    if (!link) {
+      throw new NotFoundException('Link tidak ditemukan.');
+    }
+    if (link.status === AffiliateLinkStatus.done || link.status === AffiliateLinkStatus.rejected) {
+      throw new BadRequestException('Withdraw tidak tersedia untuk link ini.');
+    }
+    if (link.events.some((event) => event.title === 'Withdraw diajukan')) {
+      throw new BadRequestException('Withdraw sudah diajukan.');
+    }
+    await this.prisma.linkEvent.create({
+      data: { affiliateLinkId: id, title: 'Withdraw diajukan' },
+    });
+    return { ok: true };
   }
 
   async preview(rawUrl: string) {

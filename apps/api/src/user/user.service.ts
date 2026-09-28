@@ -31,6 +31,19 @@ const userSelect = {
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async profile(id: string) {
+    const user = await this.prisma.user.findUnique({ where: { id }, select: userSelect });
+    if (!user) {
+      throw new NotFoundException('User tidak ditemukan.');
+    }
+    return user;
+  }
+
+  updateSelf(actor: AuthUser, input: UpdateUserDto) {
+    const { role: _role, isActive: _isActive, ...profile } = input;
+    return this.update(actor, actor.id, profile);
+  }
+
   list(query?: string) {
     const term = query?.trim();
     return this.prisma.user.findMany({

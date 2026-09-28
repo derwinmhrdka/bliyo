@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
 import { AuthUser } from '../auth/auth.types';
@@ -17,6 +17,11 @@ export class AffiliateLinkController {
   @Get('mine')
   mine(@CurrentUser() user: AuthUser) {
     return this.affiliateLinks.listMine(user.id);
+  }
+
+  @Post(':id/withdraw')
+  withdraw(@CurrentUser() user: AuthUser, @Param('id', ParseUUIDPipe) id: string) {
+    return this.affiliateLinks.withdraw(user.id, id);
   }
 
   @Public()
