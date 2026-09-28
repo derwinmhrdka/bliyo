@@ -13,7 +13,7 @@ type Item = {
 
 function BellIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path
         d="M6.2 16.5h11.6l-1.1-1.6V10a4.7 4.7 0 0 0-9.4 0v4.9l-1.1 1.6Z"
         stroke="currentColor"

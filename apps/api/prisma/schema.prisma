@@ -40,6 +40,12 @@ model User {
   lastName     String?  @map("last_name")
   username     String?  @unique
   phone        String?
+  provinceId   String?  @map("province_id")
+  provinceName String?  @map("province_name")
+  regencyId    String?  @map("regency_id")
+  regencyName  String?  @map("regency_name")
+  districtId   String?  @map("district_id")
+  districtName String?  @map("district_name")
   address      String?
   avatarData   String?  @map("avatar_data")
   referralCode String?  @map("referral_code")

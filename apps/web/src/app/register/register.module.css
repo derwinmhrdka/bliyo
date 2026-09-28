@@ -117,6 +117,22 @@
   margin-top: -9px;
 }
 
+.secretBox {
+  @apply relative block;
+}
+
+.secretInput {
+  @apply w-full pr-16;
+}
+
+.eye {
+  @apply absolute right-2 top-1/2 -translate-y-1/2 text-mute;
+}
+
+.secretBox .check {
+  right: 36px;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

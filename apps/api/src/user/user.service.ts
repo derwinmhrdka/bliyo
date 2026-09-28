@@ -8,6 +8,7 @@ import {
 import { Prisma, Role } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { AuthUser } from '../auth/auth.types';
+import { placeColumns } from '../common/place';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -20,6 +21,12 @@ const userSelect = {
   lastName: true,
   username: true,
   phone: true,
+  provinceId: true,
+  provinceName: true,
+  regencyId: true,
+  regencyName: true,
+  districtId: true,
+  districtName: true,
   address: true,
   avatarData: true,
   referralCode: true,
@@ -88,7 +95,7 @@ export class UserService {
           lastName: lastName || null,
           username,
           phone: phone || null,
-          address: input.address?.trim() || null,
+          ...placeColumns(input),
           referralCode: input.referralCode?.trim() || null,
           avatarData: this.cleanAvatar(input.avatarData),
           passwordHash: await bcrypt.hash(input.password, 10),
@@ -147,7 +154,7 @@ export class UserService {
           username,
           email,
           phone: phone === undefined ? undefined : phone || null,
-          address: input.address !== undefined ? input.address.trim() || null : undefined,
+          ...placeColumns(input, true),
           referralCode: input.referralCode !== undefined ? input.referralCode.trim() || null : undefined,
           avatarData: input.avatarData !== undefined ? this.cleanAvatar(input.avatarData) : undefined,
           isActive: input.isActive,

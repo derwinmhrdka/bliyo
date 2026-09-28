@@ -5,6 +5,8 @@ import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 import flags from 'react-phone-number-input/flags';
 import 'react-phone-number-input/style.css';
 import styles from '@/app/register/register.module.css';
+import { PasswordField } from './password-field';
+import { emptyPlace, RegionFields, type PlaceValue } from './region-fields';
 
 const USERNAME_PATTERN = /^[a-z0-9_]{3,20}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -67,7 +69,7 @@ export function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState<string | undefined>();
   const [email, setEmail] = useState('');
-  const [address, setAddress] = useState('');
+  const [place, setPlace] = useState<PlaceValue>(emptyPlace);
   const [referralCode, setReferralCode] = useState('');
   const [avatar, setAvatar] = useState('');
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'free' | 'taken'>('idle');
@@ -173,7 +175,13 @@ export function RegisterForm() {
         confirmPassword,
         phone,
         email: email.trim(),
-        address: address.trim() || undefined,
+        provinceId: place.provinceId || undefined,
+        provinceName: place.provinceName || undefined,
+        regencyId: place.regencyId || undefined,
+        regencyName: place.regencyName || undefined,
+        districtId: place.districtId || undefined,
+        districtName: place.districtName || undefined,
+        address: place.address.trim() || undefined,
         referralCode: referralCode.trim() || undefined,
         avatarData: avatar || undefined,
       }),
@@ -238,13 +246,7 @@ export function RegisterForm() {
         <span>
           Password <i className={styles.req}>*</i>
         </span>
-        <input
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          autoComplete="new-password"
-          required
-        />
+        <PasswordField value={password} onChange={setPassword} autoComplete="new-password" required />
         <span className={styles.strengthRow} data-score={password ? score : 0}>
           <span className={styles.meter} aria-hidden="true">
             <span className={styles.fill} />
@@ -262,18 +264,10 @@ export function RegisterForm() {
         <span>
           Confirmation password <i className={styles.req}>*</i>
         </span>
-        <span className={styles.usernameBox}>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            autoComplete="new-password"
-            className={confirmPassword ? styles.usernameInput : undefined}
-            required
-          />
+        <PasswordField value={confirmPassword} onChange={setConfirmPassword} autoComplete="new-password" required>
           {confirmPassword && confirmPassword === password ? <OkIcon label="Password sama" /> : null}
           {confirmPassword && confirmPassword !== password ? <BadIcon label="Password tidak sama" /> : null}
-        </span>
+        </PasswordField>
       </label>
 
       <label className={styles.field}>
@@ -309,10 +303,7 @@ export function RegisterForm() {
         </span>
       </label>
 
-      <label className={styles.field}>
-        <span>Address</span>
-        <textarea value={address} onChange={(event) => setAddress(event.target.value)} rows={3} />
-      </label>
+      <RegionFields value={place} onChange={setPlace} />
 
       <label className={styles.field}>
         <span>Referral Code</span>

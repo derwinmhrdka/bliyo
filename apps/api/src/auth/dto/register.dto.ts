@@ -33,6 +33,36 @@ export class RegisterDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(16)
+  provinceId?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  provinceName?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(16)
+  regencyId?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  regencyName?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(16)
+  districtId?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  districtName?: string;
+
+  @IsOptional()
+  @IsString()
   @MaxLength(240)
   address?: string;
 

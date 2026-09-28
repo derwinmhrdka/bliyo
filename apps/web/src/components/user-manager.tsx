@@ -6,6 +6,8 @@ import flags from 'react-phone-number-input/flags';
 import 'react-phone-number-input/style.css';
 import form from '@/app/register/register.module.css';
 import styles from '@/app/admin/user/user.module.css';
+import { PasswordField } from './password-field';
+import { RegionFields, type PlaceValue } from './region-fields';
 
 const USERNAME_PATTERN = /^[a-z0-9_]{3,20}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -20,6 +22,12 @@ type ManagedUser = {
   lastName: string | null;
   username: string | null;
   phone: string | null;
+  provinceId: string | null;
+  provinceName: string | null;
+  regencyId: string | null;
+  regencyName: string | null;
+  districtId: string | null;
+  districtName: string | null;
   address: string | null;
   avatarData: string | null;
   referralCode: string | null;
@@ -34,7 +42,7 @@ type Draft = {
   savedUsername: string;
   email: string;
   phone?: string;
-  address: string;
+  place: PlaceValue;
   referralCode: string;
   avatar: string;
   password: string;
@@ -50,7 +58,15 @@ const emptyDraft: Draft = {
   savedUsername: '',
   email: '',
   phone: undefined,
-  address: '',
+  place: {
+    provinceId: '',
+    provinceName: '',
+    regencyId: '',
+    regencyName: '',
+    districtId: '',
+    districtName: '',
+    address: '',
+  },
   referralCode: '',
   avatar: '',
   password: '',
@@ -254,7 +270,15 @@ export function UserManager({ selfId, selfRole }: { selfId: string; selfRole: Ro
       savedUsername: (user.username || '').toLowerCase(),
       email: user.email,
       phone: user.phone || undefined,
-      address: user.address || '',
+      place: {
+        provinceId: user.provinceId || '',
+        provinceName: user.provinceName || '',
+        regencyId: user.regencyId || '',
+        regencyName: user.regencyName || '',
+        districtId: user.districtId || '',
+        districtName: user.districtName || '',
+        address: user.address || '',
+      },
       referralCode: user.referralCode || '',
       avatar: user.avatarData || '',
       password: '',
@@ -303,7 +327,13 @@ export function UserManager({ selfId, selfRole }: { selfId: string; selfRole: Ro
       username: normalizedUsername,
       email: draft.email.trim(),
       phone: draft.phone,
-      address: draft.address.trim(),
+      provinceId: draft.place.provinceId,
+      provinceName: draft.place.provinceName,
+      regencyId: draft.place.regencyId,
+      regencyName: draft.place.regencyName,
+      districtId: draft.place.districtId,
+      districtName: draft.place.districtName,
+      address: draft.place.address.trim(),
       referralCode: draft.referralCode.trim(),
       avatarData: draft.avatar || '',
       isActive: editingId ? draft.isActive : undefined,
@@ -468,11 +498,11 @@ export function UserManager({ selfId, selfRole }: { selfId: string; selfRole: Ro
               <span>
                 Password {editingId ? null : <i className={form.req}>*</i>}
               </span>
-              <input
-                type="password"
+              <PasswordField
                 value={draft.password}
-                onChange={(event) => setDraft({ ...draft, password: event.target.value })}
+                onChange={(value) => setDraft({ ...draft, password: value })}
                 required={!editingId}
+                autoComplete="new-password"
               />
               <span className={form.strengthRow} data-score={draft.password ? score : 0}>
                 <span className={form.meter} aria-hidden="true">
@@ -490,17 +520,15 @@ export function UserManager({ selfId, selfRole }: { selfId: string; selfRole: Ro
               <span>
                 Confirmation password {editingId ? null : <i className={form.req}>*</i>}
               </span>
-              <span className={form.usernameBox}>
-                <input
-                  type="password"
-                  value={draft.confirmPassword}
-                  onChange={(event) => setDraft({ ...draft, confirmPassword: event.target.value })}
-                  className={draft.confirmPassword ? form.usernameInput : undefined}
-                  required={!editingId}
-                />
+              <PasswordField
+                value={draft.confirmPassword}
+                onChange={(value) => setDraft({ ...draft, confirmPassword: value })}
+                required={!editingId}
+                autoComplete="new-password"
+              >
                 {draft.confirmPassword && draft.confirmPassword === draft.password ? <OkIcon label="Password sama" /> : null}
                 {draft.confirmPassword && draft.confirmPassword !== draft.password ? <BadIcon label="Password tidak sama" /> : null}
-              </span>
+              </PasswordField>
             </label>
             <label className={form.field}>
               <span>
@@ -531,10 +559,7 @@ export function UserManager({ selfId, selfRole }: { selfId: string; selfRole: Ro
                 {draft.email.includes('@') && !EMAIL_PATTERN.test(draft.email.trim()) ? <BadIcon label="Email tidak valid" /> : null}
               </span>
             </label>
-            <label className={form.field}>
-              <span>Address</span>
-              <textarea value={draft.address} onChange={(event) => setDraft({ ...draft, address: event.target.value })} rows={3} />
-            </label>
+            <RegionFields value={draft.place} onChange={(place) => setDraft({ ...draft, place })} />
             <label className={form.field}>
               <span>Referral Code</span>
               <input value={draft.referralCode} onChange={(event) => setDraft({ ...draft, referralCode: event.target.value })} />

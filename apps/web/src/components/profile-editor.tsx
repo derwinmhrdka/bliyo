@@ -6,6 +6,8 @@ import flags from 'react-phone-number-input/flags';
 import 'react-phone-number-input/style.css';
 import form from '@/app/register/register.module.css';
 import styles from './profile-editor.module.css';
+import { PasswordField } from './password-field';
+import { RegionFields, type PlaceValue } from './region-fields';
 
 const USERNAME_PATTERN = /^[a-z0-9_]{3,20}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -16,6 +18,12 @@ type Profile = {
   username: string | null;
   email: string;
   phone: string | null;
+  provinceId: string | null;
+  provinceName: string | null;
+  regencyId: string | null;
+  regencyName: string | null;
+  districtId: string | null;
+  districtName: string | null;
   address: string | null;
   referralCode: string | null;
   avatarData: string | null;
@@ -29,7 +37,7 @@ type Draft = {
   savedUsername: string;
   email: string;
   phone?: string;
-  address: string;
+  place: PlaceValue;
   referralCode: string;
   avatar: string;
   password: string;
@@ -76,7 +84,15 @@ function toDraft(profile: Profile): Draft {
     savedUsername: (profile.username || '').toLowerCase(),
     email: profile.email,
     phone: profile.phone || undefined,
-    address: profile.address || '',
+    place: {
+      provinceId: profile.provinceId || '',
+      provinceName: profile.provinceName || '',
+      regencyId: profile.regencyId || '',
+      regencyName: profile.regencyName || '',
+      districtId: profile.districtId || '',
+      districtName: profile.districtName || '',
+      address: profile.address || '',
+    },
     referralCode: profile.referralCode || '',
     avatar: profile.avatarData || '',
     password: '',
@@ -221,7 +237,13 @@ export function ProfileEditor({ trail }: { trail: string }) {
           username: draft.username.trim().toLowerCase(),
           email: draft.email.trim(),
           phone: draft.phone,
-          address: draft.address.trim(),
+          provinceId: draft.place.provinceId,
+          provinceName: draft.place.provinceName,
+          regencyId: draft.place.regencyId,
+          regencyName: draft.place.regencyName,
+          districtId: draft.place.districtId,
+          districtName: draft.place.districtName,
+          address: draft.place.address.trim(),
           referralCode: draft.referralCode.trim(),
           avatarData: draft.avatar,
           password: draft.password || undefined,
@@ -320,7 +342,11 @@ export function ProfileEditor({ trail }: { trail: string }) {
             <>
               <label className={form.field}>
                 <span>Password</span>
-                <input type="password" value={draft.password} onChange={(event) => setDraft({ ...draft, password: event.target.value })} />
+                <PasswordField
+                  value={draft.password}
+                  onChange={(value) => setDraft({ ...draft, password: value })}
+                  autoComplete="new-password"
+                />
                 <span className={form.strengthRow} data-score={draft.password ? score : 0}>
                   <span className={form.meter} aria-hidden="true">
                     <span className={form.fill} />
@@ -335,16 +361,14 @@ export function ProfileEditor({ trail }: { trail: string }) {
               </label>
               <label className={form.field}>
                 <span>Confirmation password</span>
-                <span className={form.usernameBox}>
-                  <input
-                    type="password"
-                    value={draft.confirmPassword}
-                    onChange={(event) => setDraft({ ...draft, confirmPassword: event.target.value })}
-                    className={draft.confirmPassword ? form.usernameInput : undefined}
-                  />
+                <PasswordField
+                  value={draft.confirmPassword}
+                  onChange={(value) => setDraft({ ...draft, confirmPassword: value })}
+                  autoComplete="new-password"
+                >
                   {draft.confirmPassword && draft.confirmPassword === draft.password ? <OkIcon label="Password sama" /> : null}
                   {draft.confirmPassword && draft.confirmPassword !== draft.password ? <BadIcon label="Password tidak sama" /> : null}
-                </span>
+                </PasswordField>
               </label>
             </>
           ) : null}
@@ -379,15 +403,7 @@ export function ProfileEditor({ trail }: { trail: string }) {
               {editing && draft.email.includes('@') && !EMAIL_PATTERN.test(draft.email.trim()) ? <BadIcon label="Email tidak valid" /> : null}
             </span>
           </label>
-          <label className={form.field}>
-            <span>Address</span>
-            <textarea
-              value={draft.address}
-              readOnly={!editing}
-              onChange={(event) => setDraft({ ...draft, address: event.target.value })}
-              rows={3}
-            />
-          </label>
+          <RegionFields value={draft.place} readOnly={!editing} onChange={(place) => setDraft({ ...draft, place })} />
           <label className={form.field}>
             <span>Referral Code</span>
             <input

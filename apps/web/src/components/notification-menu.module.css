@@ -3,11 +3,11 @@
 }
 
 .bell {
-  @apply relative inline-flex h-8 w-8 items-center justify-center text-white;
+  @apply relative inline-flex h-9 w-9 items-center justify-center text-white;
 }
 
 .dot {
-  @apply absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-white;
+  @apply absolute right-1 top-1.5 h-2 w-2 rounded-full bg-white;
 }
 
 .menu {

@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, Injectable, UnauthorizedExcepti
 import { JwtService } from '@nestjs/jwt';
 import { Prisma, Role } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { placeColumns } from '../common/place';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { AuthUser } from './auth.types';
@@ -88,7 +89,6 @@ export class AuthService {
     const username = input.username.trim().toLowerCase();
     const email = input.email.trim().toLowerCase();
     const phone = input.phone.replace(/[\s-]/g, '');
-    const address = input.address?.trim() || '';
     const referralCode = input.referralCode?.trim() || '';
 
     if (!firstName) {
@@ -129,7 +129,7 @@ export class AuthService {
           lastName: lastName || null,
           username,
           phone,
-          address: address || null,
+          ...placeColumns(input),
           referralCode: referralCode || null,
           avatarData,
           passwordHash: await bcrypt.hash(input.password, 10),
