@@ -33,6 +33,7 @@ export async function registerLink(
     return { error: unavailable, shortUrl: '' };
   }
 
+  let shortCode = '';
   try {
     const response = await fetch(`${base}/api/affiliate-links`, {
       method: 'POST',
@@ -48,11 +49,13 @@ export async function registerLink(
       const message = Array.isArray(data.message) ? data.message[0] : data.message;
       return { error: message || failed, shortUrl: '' };
     }
-    if (session.role === 'member') {
-      redirect('/member/my-link');
-    }
-    return { error: '', shortUrl: `${web}/r/${data.shortCode}` };
+    shortCode = String(data.shortCode || '');
   } catch {
     return { error: unavailable, shortUrl: '' };
   }
+
+  if (session.role === 'member') {
+    redirect('/member/my-link');
+  }
+  return { error: '', shortUrl: `${web}/r/${shortCode}` };
 }

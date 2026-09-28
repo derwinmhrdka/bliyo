@@ -1,11 +1,12 @@
 import { redirect } from 'next/navigation';
 import { CmsShell } from '@/components/cms-shell';
 import { getSession } from '@/lib/session';
+import { sidebarIdentity } from '@/lib/sidebar-identity';
 
 const items = [
+  { href: '/member/profile', label: 'Profile' },
   { href: '/member', label: 'Dashboard', exact: true },
   { href: '/member/my-link', label: 'My Link' },
-  { href: '/member/profile', label: 'Profile' },
   { href: '/member/settings', label: 'Settings' },
   { href: '/member/transaction', label: 'Transaction' },
 ];
@@ -19,5 +20,11 @@ export default async function MemberLayout({ children }: { children: React.React
     redirect('/admin');
   }
 
-  return <CmsShell items={items}>{children}</CmsShell>;
+  const identity = await sidebarIdentity(session.name);
+
+  return (
+    <CmsShell items={items} profile={{ href: '/member/profile', ...identity }}>
+      {children}
+    </CmsShell>
+  );
 }

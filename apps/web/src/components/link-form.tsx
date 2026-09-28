@@ -1,12 +1,14 @@
 'use client';
 
 import { useActionState, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { registerLink, type RegisterLinkState } from '@/app/actions/register-link';
 import styles from '@/app/home.module.css';
 
 const initialState: RegisterLinkState = { error: '', shortUrl: '' };
 
 export function LinkForm({
+  signedIn,
   locale,
   placeholder,
   submit,
@@ -15,6 +17,7 @@ export function LinkForm({
   copyLabel,
   copiedLabel,
 }: {
+  signedIn: boolean;
   locale: 'id' | 'en';
   placeholder: string;
   submit: string;
@@ -23,6 +26,7 @@ export function LinkForm({
   copyLabel: string;
   copiedLabel: string;
 }) {
+  const router = useRouter();
   const [state, action, pending] = useActionState(registerLink, initialState);
   const [didCopy, setDidCopy] = useState(false);
   const [url, setUrl] = useState('');
@@ -83,7 +87,16 @@ export function LinkForm({
           onChange={(event) => setUrl(event.target.value)}
         />
         <input type="hidden" name="locale" value={locale} />
-        <button type="submit" disabled={pending} className={styles.button}>
+        <button
+          type="submit"
+          disabled={pending}
+          className={styles.button}
+          onClick={(event) => {
+            if (signedIn) return;
+            event.preventDefault();
+            router.push('/login');
+          }}
+        >
           {pending ? pendingLabel : submit}
         </button>
       </form>

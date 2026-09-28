@@ -12,7 +12,15 @@ export type CmsNavItem = {
   exact?: boolean;
 };
 
-export function CmsShell({ children, items }: { children: React.ReactNode; items: CmsNavItem[] }) {
+export function CmsShell({
+  children,
+  items,
+  profile,
+}: {
+  children: React.ReactNode;
+  items: CmsNavItem[];
+  profile: { href: string; firstName: string; avatar: string };
+}) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -28,6 +36,12 @@ export function CmsShell({ children, items }: { children: React.ReactNode; items
       <aside className={`${styles.aside} ${open ? styles.asideOpen : ''}`}>
         <Link href="/" className={styles.brand}>
           <img src="/brand/bliyo-logo.png" alt="Bliyo" className={styles.mark} />
+        </Link>
+        <Link href={profile.href} className={styles.identity} onClick={() => setOpen(false)}>
+          <span className={styles.avatar}>
+            {profile.avatar ? <img src={profile.avatar} alt="" /> : (profile.firstName || 'B').slice(0, 1).toUpperCase()}
+          </span>
+          <span className={styles.greeting}>{profile.firstName ? `Hi, ${profile.firstName}` : 'Hi'}</span>
         </Link>
         <nav className={styles.nav}>
           {items.map((item) => (

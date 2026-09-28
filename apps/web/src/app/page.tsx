@@ -113,6 +113,7 @@ export default async function HomePage() {
           {copy.leadAfter}
         </p>
         <LinkForm
+          signedIn={Boolean(session)}
           locale={locale}
           placeholder={copy.placeholder}
           submit={copy.submit}
