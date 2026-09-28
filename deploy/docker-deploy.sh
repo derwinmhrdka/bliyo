@@ -41,7 +41,8 @@ docker image prune -f >/dev/null 2>&1 || true
 
 echo "==> Building and starting containers on 127.0.0.1:${APP_HOST_PORT}..."
 echo "    HTTPS is handled by host nginx — see deploy/nginx-bliyo.conf.example"
-$COMPOSE up -d --build --remove-orphans
+# Satu image pada satu waktu. API dan web sama-sama membangun Next.js; paralel di VPS 2GB membuat build tidak selesai.
+COMPOSE_PARALLEL_LIMIT=1 $COMPOSE up -d --build --remove-orphans
 
 echo "==> Container status:"
 $COMPOSE ps -a
