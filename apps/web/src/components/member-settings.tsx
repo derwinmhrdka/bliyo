@@ -71,7 +71,7 @@ export function MemberSettings() {
     <form className={styles.form} onSubmit={(event) => void save(event)}>
       {error ? <p className={styles.error}>{error}</p> : null}
       {saved ? <p className={styles.ok}>Pengaturan disimpan.</p> : null}
-      <div className={styles.grid}>
+      <div className={styles.fields}>
         <label className={styles.field}>
           Bahasa
           <select value={locale} onChange={(event) => setLocale(event.target.value as Locale)}>

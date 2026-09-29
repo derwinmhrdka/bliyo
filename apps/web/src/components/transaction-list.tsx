@@ -127,7 +127,7 @@ export function TransactionList({ mode }: { mode: 'admin' | 'member' }) {
     <>
       {mode === 'admin' ? (
         <form className={styles.form} onSubmit={(event) => void save(event)}>
-          <div className={styles.grid}>
+          <div className={styles.fields}>
             <label className={styles.field}>
               Member
               <select

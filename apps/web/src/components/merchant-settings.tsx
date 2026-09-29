@@ -103,7 +103,7 @@ export function MerchantSettings() {
   return (
     <>
       <form className={styles.form} onSubmit={(event) => void create(event)}>
-        <div className={styles.grid}>
+        <div className={styles.fields}>
           <label className={styles.field}>
             Nama toko
             <input required value={draft.name} onChange={(event) => setDraft({ ...draft, name: event.target.value })} />
@@ -146,7 +146,7 @@ export function MerchantSettings() {
       <ul className={styles.list}>
         {rows.map((row) => (
           <li key={row.id} className={styles.card}>
-            <div className={styles.grid}>
+            <div className={styles.fields}>
               <label className={styles.field}>
                 Nama toko
                 <input value={row.name} onChange={(event) => patch(row.id, { name: event.target.value })} />
