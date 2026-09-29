@@ -6,21 +6,29 @@ import styles from './splash-screen.module.css';
 
 const DASHBOARDS = new Set(['/admin', '/member']);
 
-function shouldSplash(path: string, firstLoad: boolean) {
+function inCms(path: string) {
+  return path === '/admin' || path.startsWith('/admin/') || path === '/member' || path.startsWith('/member/');
+}
+
+function shouldSplash(path: string, firstLoad: boolean, from: string | null) {
   if (firstLoad) return true;
   if (path === '/login') return true;
+  if (from && inCms(from) && inCms(path)) return false;
   return DASHBOARDS.has(path);
 }
 
 export function SplashScreen() {
   const pathname = usePathname();
   const firstLoad = useRef(true);
+  const previous = useRef<string | null>(null);
   const [phase, setPhase] = useState<'enter' | 'show' | 'leave'>('enter');
 
   useEffect(() => {
     const first = firstLoad.current;
+    const from = previous.current;
     firstLoad.current = false;
-    if (!shouldSplash(pathname, first)) {
+    previous.current = pathname;
+    if (!shouldSplash(pathname, first, from)) {
       setPhase('leave');
       return;
     }

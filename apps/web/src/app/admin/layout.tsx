@@ -6,6 +6,7 @@ import { sidebarIdentity } from '@/lib/sidebar-identity';
 const items = [
   { href: '/admin/profile', label: 'Profile' },
   { href: '/admin', label: 'Dashboard', exact: true },
+  { href: '/admin/links', label: 'Links' },
   { href: '/admin/user', label: 'User' },
   { href: '/admin/settings', label: 'Settings' },
   { href: '/admin/transactions', label: 'Transactions' },

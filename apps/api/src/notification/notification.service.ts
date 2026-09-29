@@ -15,7 +15,12 @@ const itemSelect = {
 export class NotificationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  add(userId: string, title: string, body: string) {
+  async add(userId: string, title: string, body: string) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { notifyEnabled: true },
+    });
+    if (!user?.notifyEnabled) return { id: null };
     return this.prisma.notification.create({
       data: { userId, title, body },
       select: { id: true },

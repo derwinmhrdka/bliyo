@@ -11,6 +11,7 @@ import { TransactionModule } from './transaction/transaction.module';
 import { CommissionModule } from './commission/commission.module';
 import { NotificationModule } from './notification/notification.module';
 import { RegionModule } from './region/region.module';
+import { MerchantModule } from './merchant/merchant.module';
 
 const redisEnabled = process.env.REDIS_ENABLED !== 'false';
 
@@ -43,6 +44,7 @@ const redisEnabled = process.env.REDIS_ENABLED !== 'false';
     CommissionModule,
     NotificationModule,
     RegionModule,
+    MerchantModule,
   ],
   controllers: [AppController],
 })

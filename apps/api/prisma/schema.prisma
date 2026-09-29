@@ -49,6 +49,7 @@ model User {
   address      String?
   avatarData   String?  @map("avatar_data")
   referralCode String?  @map("referral_code")
+  notifyEnabled Boolean @default(true) @map("notify_enabled")
   passwordHash String?  @map("password_hash")
   role         Role     @default(member)
   isActive     Boolean  @default(true) @map("is_active")

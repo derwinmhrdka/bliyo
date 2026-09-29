@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import styles from '@/app/member/my-link/my-link.module.css';
 
 type Status = 'processing' | 'note' | 'done' | 'rejected';
@@ -38,6 +38,8 @@ export function MyLinkList() {
   const [historyId, setHistoryId] = useState<string | null>(null);
   const [preview, setPreview] = useState<Record<string, { image: string; description: string }>>({});
   const [pending, setPending] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const [url, setUrl] = useState('');
   const [origin, setOrigin] = useState('');
 
   useEffect(() => {
@@ -89,6 +91,42 @@ export function MyLinkList() {
     setHistoryId(id);
   }
 
+  async function addLink(event: FormEvent) {
+    event.preventDefault();
+    const originalUrl = url.trim();
+    if (!originalUrl) return;
+    setAdding(true);
+    setError('');
+    try {
+      const response = await fetch('/api/affiliate-links', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ originalUrl }),
+      });
+      const data = await response.json().catch(() => null);
+      if (!response.ok) {
+        const message = Array.isArray(data?.message) ? data.message[0] : data?.message;
+        setError(message || 'Link gagal didaftarkan.');
+        return;
+      }
+      const created: MineLink = {
+        id: data.id,
+        originalUrl: data.originalUrl,
+        shortCode: data.shortCode,
+        status: 'processing',
+        events: [{ id: `local-${Date.now()}`, title: 'Link didaftarkan', createdAt: new Date().toISOString() }],
+      };
+      setLinks((current) => [created, ...current]);
+      setUrl('');
+      setOpenId(created.id);
+      setHistoryId(created.id);
+    } catch {
+      setError('Link gagal didaftarkan.');
+    } finally {
+      setAdding(false);
+    }
+  }
+
   async function withdraw(id: string) {
     setPending(true);
     setError('');
@@ -118,12 +156,24 @@ export function MyLinkList() {
 
   const history = links.find((link) => link.id === historyId);
 
-  if (loading) return <p className={styles.muted}>Memuat link...</p>;
-  if (!links.length && !error) return <p className={styles.muted}>Belum ada link.</p>;
-
   return (
     <>
-      {error ? <p className="mb-3 text-xs font-semibold text-danger">{error}</p> : null}
+      <form className={styles.add} onSubmit={(event) => void addLink(event)}>
+        <input
+          type="url"
+          required
+          value={url}
+          placeholder="Tempel link produk"
+          className={styles.addInput}
+          onChange={(event) => setUrl(event.target.value)}
+        />
+        <button type="submit" className={styles.addButton} disabled={adding}>
+          {adding ? 'Mendaftarkan...' : 'Daftarkan'}
+        </button>
+      </form>
+      {error ? <p className={styles.addError}>{error}</p> : null}
+      {loading ? <p className={styles.muted}>Memuat link...</p> : null}
+      {!loading && !links.length ? <p className={styles.muted}>Belum ada link.</p> : null}
       <ul className={styles.list}>
         {links.map((link) => {
           const open = openId === link.id;

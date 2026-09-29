@@ -30,6 +30,7 @@ const userSelect = {
   address: true,
   avatarData: true,
   referralCode: true,
+  notifyEnabled: true,
   role: true,
   isActive: true,
 } satisfies Prisma.UserSelect;
@@ -157,6 +158,7 @@ export class UserService {
           ...placeColumns(input, true),
           referralCode: input.referralCode !== undefined ? input.referralCode.trim() || null : undefined,
           avatarData: input.avatarData !== undefined ? this.cleanAvatar(input.avatarData) : undefined,
+          notifyEnabled: input.notifyEnabled,
           isActive: input.isActive,
           role: input.role,
           passwordHash: password ? await bcrypt.hash(password, 10) : undefined,

@@ -6,6 +6,50 @@ import { AffiliateLinkStatus, Prisma } from '@prisma/client';
 import { NotificationService } from '../notification/notification.service';
 import { PrismaService } from '../prisma/prisma.service';
 
+const STATUS_EVENT: Record<AffiliateLinkStatus, string> = {
+  processing: 'Sedang diproses',
+  note: 'Catatan',
+  done: 'Selesai',
+  rejected: 'Ditolak',
+};
+
+const STATUS_NOTICE: Record<AffiliateLinkStatus, { title: string; body: string }> = {
+  processing: { title: 'Link diproses', body: 'Status linkmu menjadi sedang diproses.' },
+  note: { title: 'Catatan link', body: '' },
+  done: { title: 'Link selesai', body: 'Status linkmu menjadi selesai.' },
+  rejected: { title: 'Link ditolak', body: 'Status linkmu menjadi ditolak.' },
+};
+
+const reviewSelect = {
+  id: true,
+  originalUrl: true,
+  shortCode: true,
+  status: true,
+  createdAt: true,
+  user: { select: { id: true, name: true, firstName: true } },
+  merchant: { select: { name: true } },
+  events: {
+    orderBy: { createdAt: 'asc' as const },
+    select: { id: true, title: true, createdAt: true },
+  },
+} satisfies Prisma.AffiliateLinkSelect;
+
+function presentReview(link: Prisma.AffiliateLinkGetPayload<{ select: typeof reviewSelect }>) {
+  const noteEvent = [...link.events].reverse().find((event) => event.title !== 'Link didaftarkan' && event.title !== 'Withdraw diajukan' && !Object.values(STATUS_EVENT).includes(event.title));
+  return {
+    id: link.id,
+    originalUrl: link.originalUrl,
+    shortCode: link.shortCode,
+    status: link.status,
+    createdAt: link.createdAt,
+    userId: link.user.id,
+    memberName: link.user.firstName || link.user.name,
+    merchantName: link.merchant?.name ?? null,
+    note: link.status === AffiliateLinkStatus.note ? noteEvent?.title || '' : '',
+    events: link.events,
+  };
+}
+
 @Injectable()
 export class AffiliateLinkService {
   constructor(
@@ -104,6 +148,55 @@ export class AffiliateLinkService {
       data: { affiliateLinkId: id, title: 'Withdraw diajukan' },
     });
     return { ok: true };
+  }
+
+  listForReview() {
+    return this.prisma.affiliateLink
+      .findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 100,
+        select: reviewSelect,
+      })
+      .then((links) => links.map(presentReview));
+  }
+
+  async setStatus(id: string, status: AffiliateLinkStatus, note?: string) {
+    const link = await this.prisma.affiliateLink.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        userId: true,
+        status: true,
+        events: { orderBy: { createdAt: 'desc' }, take: 8, select: { title: true } },
+      },
+    });
+    if (!link) {
+      throw new NotFoundException('Link tidak ditemukan.');
+    }
+
+    const trimmed = (note || '').trim();
+    if (status === AffiliateLinkStatus.note && trimmed.length < 2) {
+      throw new BadRequestException('Isi catatan.');
+    }
+
+    const title = status === AffiliateLinkStatus.note ? trimmed : STATUS_EVENT[status];
+    const sameNote = status === AffiliateLinkStatus.note && link.events.some((event) => event.title === title);
+    if (link.status === status && (status !== AffiliateLinkStatus.note || sameNote)) {
+      const current = await this.prisma.affiliateLink.findUnique({ where: { id }, select: reviewSelect });
+      if (!current) throw new NotFoundException('Link tidak ditemukan.');
+      return presentReview(current);
+    }
+
+    await this.prisma.affiliateLink.update({
+      where: { id },
+      data: { status, events: { create: { title } } },
+    });
+    const notice = STATUS_NOTICE[status];
+    await this.notifications.add(link.userId, notice.title, status === AffiliateLinkStatus.note ? trimmed : notice.body);
+
+    const updated = await this.prisma.affiliateLink.findUnique({ where: { id }, select: reviewSelect });
+    if (!updated) throw new NotFoundException('Link tidak ditemukan.');
+    return presentReview(updated);
   }
 
   async preview(rawUrl: string) {

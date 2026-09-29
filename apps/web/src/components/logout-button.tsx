@@ -22,11 +22,13 @@ export function LogoutButton({
   label = 'Keluar',
   withIcon = false,
   className,
+  labelClassName,
 }: {
   tone?: 'muted' | 'light';
   label?: string;
   withIcon?: boolean;
   className?: string;
+  labelClassName?: string;
 }) {
   const [ask, setAsk] = useState(false);
   const [host, setHost] = useState<HTMLElement | null>(null);
@@ -58,7 +60,7 @@ export function LogoutButton({
     <>
       <button type="button" onClick={() => setAsk(true)} className={className ?? toneClass}>
         {withIcon ? <LogoutIcon /> : null}
-        {label}
+        <span className={labelClassName}>{label}</span>
       </button>
       {host
         ? createPortal(

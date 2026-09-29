@@ -1,11 +1,12 @@
-import { UnderDevelopment } from '@/components/under-development';
+import { MemberSettings } from '@/components/member-settings';
 import styles from '../member.module.css';
 
 export default function MemberSettingsPage() {
   return (
     <>
       <p className={styles.trail}>CMS Member / Settings</p>
-      <UnderDevelopment title="Settings" description="Pengaturan akun member menyusul." />
+      <h1 className={styles.title}>Settings</h1>
+      <MemberSettings />
     </>
   );
 }

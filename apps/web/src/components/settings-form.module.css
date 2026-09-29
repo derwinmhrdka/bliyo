@@ -1,0 +1,60 @@
+.form {
+  @apply mb-4 max-w-xl rounded-[12px] border border-line p-3;
+}
+
+.grid {
+  @apply grid gap-2 sm:grid-cols-2;
+}
+
+.field {
+  @apply flex flex-col gap-1 text-xs font-semibold text-mute;
+}
+
+.fieldWide {
+  @apply sm:col-span-2;
+}
+
+.field input,
+.field select {
+  @apply rounded-[9px] border border-line px-2.5 py-2 text-sm font-medium text-ink outline-none;
+}
+
+.check {
+  @apply flex items-center gap-2 text-sm font-semibold text-ink;
+}
+
+.actions {
+  @apply mt-3 flex justify-end;
+}
+
+.save {
+  @apply rounded-[9px] bg-green-dark px-3 py-2 text-xs font-bold text-white disabled:opacity-60;
+}
+
+.list {
+  @apply flex max-w-xl flex-col gap-2;
+}
+
+.card {
+  @apply rounded-[12px] border border-line px-3 py-3;
+}
+
+.card p {
+  @apply text-sm font-semibold text-ink;
+}
+
+.meta {
+  @apply mt-1 text-xs text-mute;
+}
+
+.muted {
+  @apply text-sm text-mute;
+}
+
+.error {
+  @apply mb-3 text-xs font-semibold text-danger;
+}
+
+.ok {
+  @apply mb-3 text-xs font-semibold text-green-dark;
+}
